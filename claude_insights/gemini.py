@@ -31,7 +31,7 @@ def check_gemini_cli():
         print(
             "Error: Gemini CLI not found.\n\n"
             "Install it with:\n"
-            "  npm install -g @anthropic-ai/gemini-cli\n"
+            "  npm install -g @google/gemini-cli\n"
             "  # or\n"
             "  brew install gemini-cli\n\n"
             "Then authenticate:\n"
@@ -57,13 +57,14 @@ def call_gemini(prompt_text):
         tmp_path = f.name
 
     try:
-        result = subprocess.run(
-            f'cat "{tmp_path}" | gemini -m gemini-2.5-pro -p "" -o json',
-            shell=True,
-            capture_output=True,
-            text=True,
-            timeout=300,
-        )
+        with open(tmp_path, "r") as stdin_file:
+            result = subprocess.run(
+                ["gemini", "-m", "gemini-2.5-pro", "-p", "", "-o", "json"],
+                stdin=stdin_file,
+                capture_output=True,
+                text=True,
+                timeout=300,
+            )
 
         if result.returncode != 0:
             stderr_snippet = (result.stderr[:500] if result.stderr

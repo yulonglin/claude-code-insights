@@ -195,10 +195,9 @@ def load_all_facets(facets_dir, project_filter=None, since_days=None):
     if not facets_dir.exists():
         return facets
 
-    cutoff_ts = None
+    cutoff_dt = None
     if since_days is not None:
         cutoff_dt = datetime.now(timezone.utc) - timedelta(days=since_days)
-        cutoff_ts = cutoff_dt.isoformat()
 
     for fp in sorted(facets_dir.glob("*.json")):
         try:
@@ -209,10 +208,17 @@ def load_all_facets(facets_dir, project_filter=None, since_days=None):
         if project_filter and project_filter not in facet.get("project", ""):
             continue
 
-        if cutoff_ts:
+        if cutoff_dt:
             ts = facet.get("start_timestamp")
-            if ts and ts < cutoff_ts:
-                continue
+            if ts:
+                try:
+                    facet_dt = datetime.fromisoformat(
+                        ts.replace("Z", "+00:00")
+                    )
+                    if facet_dt < cutoff_dt:
+                        continue
+                except (ValueError, TypeError):
+                    pass  # keep facets with unparseable timestamps
 
         facets.append(facet)
     return facets
@@ -300,7 +306,7 @@ def compute_temporal_stats(facets):
         except (ValueError, TypeError):
             continue
 
-        week_key = dt.strftime("%Y-W%W")
+        week_key = dt.strftime("%G-W%V")
         weekly[week_key]["count"] += 1
         if f.get("outcome") == "fully_achieved":
             weekly[week_key]["fully_achieved"] += 1

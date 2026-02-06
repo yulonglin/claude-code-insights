@@ -13,7 +13,7 @@ Uses [Gemini CLI](https://github.com/google-gemini/gemini-cli) to process sessio
 - **Python 3.9+** (stdlib only — zero pip dependencies)
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — install and authenticate:
   ```bash
-  npm install -g @anthropic-ai/gemini-cli
+  npm install -g @google/gemini-cli
   gemini  # authenticate on first run
   ```
 - **Claude Code sessions** — the tool reads from `~/.claude/projects/` (Claude Code's default session storage)
@@ -86,7 +86,7 @@ Pre-computed statistics include:
 
 ### Phase 3: Report Generation
 
-Gemini generates a self-contained HTML report with four coaching sections:
+Gemini generates a self-contained HTML report with five sections:
 
 1. **How You Use Claude Code** — mirrors your usage patterns back to you
 2. **What Makes Your Usage Distinctive** — surfaces non-obvious patterns

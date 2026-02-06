@@ -4,19 +4,18 @@ import argparse
 import platform
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 from claude_insights.gemini import (
     check_gemini_cli,
     generate_report,
     make_batches,
-    build_batch_prompt,
     process_batch,
     save_facet,
 )
 from claude_insights.sessions import (
     clean_transcript,
-    compute_aggregate_stats,
     discover_sessions,
     filter_cached,
     list_projects,
@@ -224,7 +223,6 @@ def main():
     # Load facet prompt
     facet_prompt = (prompts_dir / "facet_prompt.txt").read_text()
 
-    import time
     total_facets = 0
     start_time = time.time()
 
